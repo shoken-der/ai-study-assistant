@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Practice Quiz | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">PRACTICE QUIZ</p>
+        <h1 class="section-title">
+            Practice <span class="gradient-text">Quiz</span>
+        </h1>
+        <p class="muted">Questions from your note: <strong>{{ note_title }}</strong></p>
+    </div>
+
+    <form method="post" action="{% url 'quiz_submit' %}">
+        {% csrf_token %}
+
+        {% for question in questions %}
+            <section class="glass-card quiz-question p-4 p-md-5 mb-4">
+                <p class="eyebrow">
+                    QUESTION {{ forloop.counter }} OF {{ questions|length }}
+                </p>
+
+                <h4 class="mb-4">{{ question.question }}</h4>
+
+                <div class="quiz-options">
+                    {% for option in question.options %}
+                        <label class="quiz-option">
+                            <input
+                                type="radio"
+                                name="answer_{{ forloop.parentloop.counter0 }}"
+                                value="{{ forloop.counter0 }}"
+                                required
+                            >
+                            <span class="option-letter">
+                                {{ forloop.counter }}
+                            </span>
+                            <span>{{ option }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-glow">
+            Check My Answers →
+        </button>
+        <a href="{% url 'quiz_generator' %}" class="btn btn-glass ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

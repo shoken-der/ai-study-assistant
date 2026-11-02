@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load assistant_tags %}
+
+{% block title %}Simple Explainer | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">EASY EXPLANATIONS</p>
+        <h1 class="section-title">
+            Simple <span class="gradient-text">Explainer</span>
+        </h1>
+        <p class="muted">
+            Stuck on a confusing topic? Ask your AI study buddy to explain it using simple words and examples.
+        </p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+        {% if error_message %}
+            <div class="alert alert-warning">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label for="concept" class="form-label">
+                    What topic do you want explained?
+                </label>
+                <input
+                    type="text"
+                    id="concept"
+                    name="concept"
+                    class="form-control"
+                    maxlength="200"
+                    placeholder="e.g. How does photosynthesis work, or What is an API?"
+                    value="{{ concept }}"
+                    required
+                >
+            </div>
+
+            <div class="mb-4">
+                <label for="level" class="form-label">How simple should the explanation be?</label>
+                <select name="level" id="level" class="form-select">
+                    <option value="beginner"
+                        {% if level == "beginner" %}selected{% endif %}>
+                        Super Simple — Like I'm 10 years old (with everyday examples)
+                    </option>
+                    <option value="intermediate"
+                        {% if level == "intermediate" %}selected{% endif %}>
+                        Standard — Clear and detailed for school or college
+                    </option>
+                    <option value="advanced"
+                        {% if level == "advanced" %}selected{% endif %}>
+                        In-Depth — For deeper understanding
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-glow">
+                ✨ Explain It In Simple Words
+            </button>
+        </form>
+    </div>
+
+    {% if explanation %}
+        <div class="glass-card p-4 p-md-5">
+            <p class="eyebrow">HERE IS YOUR EXPLANATION</p>
+            <h2 class="mb-4">
+                Understanding <span class="gradient-text">{{ concept }}</span>
+            </h2>
+            <div class="summary-output">
+                {{ explanation|format_ai }}
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-glass"
+                    onclick="navigator.clipboard.writeText(document.getElementById('concept-answer').innerText).then(() => alert('Explanation copied!')).catch(() => alert('Copy failed. Please copy manually.'))">
+                    📋 Copy Explanation
+                </button>
+                <div id="concept-answer" hidden>{{ explanation }}</div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-glass">
+            ← Back to Workspace
+        </a>
+    </div>
+</div>
+{% endblock %}

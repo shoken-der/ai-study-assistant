@@ -1,0 +1,28 @@
+# Environment & Sensitive Keys
+.env
+.env.local
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database & Logs
+db.sqlite3
+db.sqlite3-journal
+*.log
+local_settings.py
+
+# IDE & OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="glass-card p-4 p-md-5 mx-auto" style="max-width: 650px;">
+        <p class="eyebrow">CONFIRM ACTION</p>
+        <h1 class="section-title">Delete this <span class="gradient-text">note?</span></h1>
+        <p>You're about to delete <strong>{{ note.title }}</strong>.</p>
+        <p class="muted">This action cannot be undone.</p>
+
+        <form method="post" class="d-flex flex-wrap gap-3 mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete note</button>
+            <a href="{% url 'notes_list' %}" class="btn btn-glass">Keep note</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}My Study Space | StudyAI{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+
+    <!-- DASHBOARD HEADER -->
+    <section class="d-flex flex-wrap justify-content-between align-items-center gap-4 mb-5 pt-2">
+        <div>
+            <div class="eyebrow mb-3">
+                <span class="status-dot"></span>
+                YOUR PERSONAL STUDY SPACE
+            </div>
+            <h1 class="mb-2" style="font-size: clamp(2.2rem, 5vw, 3.6rem)">
+                Welcome back, <span class="gradient-text">{{ user.username }}</span>!
+            </h1>
+            <p class="hero-copy mb-0">
+                What do you want to learn today? Pick any tool below to make studying easier.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 align-items-center">
+            <a href="{% url 'note_create' %}" class="btn-glow text-decoration-none">
+                <span>+</span> New Note
+            </a>
+            <a href="{% url 'learning_progress' %}" class="btn-glass text-decoration-none">
+                <span>📊</span> My Quiz Scores →
+            </a>
+        </div>
+    </section>
+
+    <!-- 3 EQUAL STAT CARDS (MATCHING WIDTH & BREADTH) -->
+    <section class="dashboard-stat-row mb-5">
+        <!-- Card 1 -->
+        <div class="glass-card dashboard-stat-card">
+            <div class="dashboard-stat-header">
+                <span class="stat-meta-label mb-0">MY NOTES</span>
+                <span class="dashboard-stat-icon stat-icon-purple">📚</span>
+            </div>
+            <div class="dashboard-stat-body">
+                <span class="stat-value gradient-text">{{ notes_count }}</span>
+                <span class="stat-unit-label">Saved Note{% if notes_count != 1 %}s{% endif %}</span>
+            </div>
+            <div class="dashboard-stat-footer">
+                <span class="stat-tag">
+                    <span>✦</span> Ready to study & summarize
+                </span>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card dashboard-stat-card">
+            <div class="dashboard-stat-header">
+                <span class="stat-meta-label mb-0">AI STUDY BUDDY</span>
+                <span class="dashboard-stat-icon stat-icon-cyan">✦</span>
+            </div>
+            <div class="dashboard-stat-body">
+                <span class="stat-value text-white">Ready to Help</span>
+            </div>
+            <div class="dashboard-stat-footer">
+                <span class="stat-tag">
+                    <span class="status-dot"></span> Online and available 24/7
+                </span>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card dashboard-stat-card">
+            <div class="dashboard-stat-header">
+                <span class="stat-meta-label mb-0">TODAY'S GOAL</span>
+                <span class="dashboard-stat-icon stat-icon-emerald">🎯</span>
+            </div>
+            <div class="dashboard-stat-body">
+                <span class="stat-value text-cyan">Keep Learning</span>
+            </div>
+            <div class="dashboard-stat-footer">
+                <span class="stat-tag">
+                    <span>⚡</span> One step at a time
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLKIT SECTION HEADER -->
+    <section class="mb-4">
+        <div class="eyebrow mb-2">CHOOSE A TOOL</div>
+        <h2 class="section-title mt-2">What would you like to do?</h2>
+        <p class="muted">All these tools use your saved notes to help you study faster.</p>
+    </section>
+
+    <!-- 6 SIMPLE FEATURE CARDS -->
+    <section class="row g-4">
+        <!-- 01: Notes -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">📚</div>
+                <h4>Study Notes</h4>
+                <p class="muted">
+                    Write, organize, and find all your subject notes in one clean place.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'notes_list' %}" class="tool-link stretched-link">Open Notes ↗</a>
+                    <span class="muted small fw-bold">01 / ORGANIZE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02: AI Summarizer -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">✦</div>
+                <h4>Short Summaries</h4>
+                <p class="muted">
+                    Turn long, tiring notes into clear bullet points you can read in two minutes.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'summarizer' %}" class="tool-link stretched-link">Make a Summary ↗</a>
+                    <span class="muted small fw-bold">02 / SHORTEN</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03: Quiz Studio -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">🎯</div>
+                <h4>Practice Quizzes</h4>
+                <p class="muted">
+                    Test your memory with fun multiple-choice questions made from your notes.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'quiz_generator' %}" class="tool-link stretched-link">Take a Quiz ↗</a>
+                    <span class="muted small fw-bold">03 / PRACTICE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04: Flashcard Lab -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">🧠</div>
+                <h4>Revision Flashcards</h4>
+                <p class="muted">
+                    Flip through 3D cards to quickly remember key terms before an exam.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'flashcard_lab' %}" class="tool-link stretched-link">Flip Cards ↗</a>
+                    <span class="muted small fw-bold">04 / REMEMBER</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05: Concept Explainer -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">💡</div>
+                <h4>Easy Explanations</h4>
+                <p class="muted">
+                    Ask the AI to explain confusing topics using simple everyday examples.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'concept_explainer' %}" class="tool-link stretched-link">Explain Something ↗</a>
+                    <span class="muted small fw-bold">05 / UNDERSTAND</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 06: Learning Progress -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-card feature-card h-100">
+                <div class="feature-icon">📈</div>
+                <h4>My Quiz Scores</h4>
+                <p class="muted">
+                    See your past quiz scores and track how much your understanding has improved.
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-white border-opacity-10">
+                    <a href="{% url 'learning_progress' %}" class="tool-link stretched-link">Check My Scores ↗</a>
+                    <span class="muted small fw-bold">06 / TRACK</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECENT STUDY VAULT -->
+    <section class="mt-5 pt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div class="eyebrow mb-1">SAVED WORK</div>
+                <h3 class="section-title mb-0">Your Recent <span class="gradient-text">Study Notes</span></h3>
+            </div>
+            <a href="{% url 'notes_list' %}" class="tool-link">View All Notes →</a>
+        </div>
+
+        <div class="glass-card p-4">
+            <div class="d-flex flex-wrap gap-3">
+                {% for note in recent_notes %}
+                    <a href="{% url 'note_edit' note.pk %}" class="btn-glass text-decoration-none">
+                        <span>📝</span> {{ note.title }}
+                    </a>
+                {% empty %}
+                    <div class="p-3 text-center w-100 muted">
+                        <p class="mb-2">You don't have any saved notes yet.</p>
+                        <a href="{% url 'note_create' %}" class="btn-glow btn-sm">Write your first note ↗</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

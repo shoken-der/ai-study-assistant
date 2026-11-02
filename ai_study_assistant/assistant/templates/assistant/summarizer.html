@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load assistant_tags %}
+
+{% block title %}Short Summarizer | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">QUICK SUMMARY</p>
+        <h1 class="section-title">
+            Short <span class="gradient-text">Summarizer</span>
+        </h1>
+        <p class="muted">
+            Turn long, tiring notes into short bullet points you can read in two minutes.
+        </p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="note_id" class="form-label">Which note do you want to shorten?</label>
+            <select name="note_id" id="note_id" class="form-select mb-4" required>
+                <option value="">-- Choose a note --</option>
+                {% for note in notes %}
+                    <option value="{{ note.pk }}"
+                        {% if selected_note_id == note.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ note.title }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            {% if not notes %}
+                <p class="muted">You don't have any saved notes yet. Write a note first.</p>
+                <a href="{% url 'note_create' %}" class="btn btn-glow">
+                    + Write a Note
+                </a>
+            {% else %}
+                <button type="submit" class="btn btn-glow">
+                    ✨ Make Short Summary
+                </button>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if error_message %}
+        <div class="alert alert-warning">{{ error_message }}</div>
+    {% endif %}
+
+    {% if summary %}
+        <div class="glass-card p-4 p-md-5">
+            <p class="eyebrow">HERE IS YOUR SUMMARY</p>
+            <h2 class="mb-4">Key Points <span class="gradient-text">To Remember</span></h2>
+            <div class="summary-output">{{ summary|format_ai }}</div>
+
+            <div class="mt-4 d-flex flex-wrap gap-3">
+                <button type="button" class="btn btn-glass"
+                    onclick="navigator.clipboard.writeText(document.querySelector('.summary-output').innerText).then(() => alert('Summary copied to clipboard!')).catch(() => alert('Copy failed. Please select and copy manually.'))">
+                    📋 Copy Summary
+                </button>
+                <a href="{% url 'notes_list' %}" class="btn btn-glow">
+                    ← Back to Notes
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

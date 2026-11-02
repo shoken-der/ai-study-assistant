@@ -1,0 +1,16 @@
+# Environment & Sensitive Keys
+**/.env
+**/.env.local
+.env
+
+# Virtual Environments
+**/venv/
+**/.venv/
+
+# Python bytecode
+**/__pycache__/
+**/*.py[cod]
+
+# Database & Logs
+**/*.sqlite3
+**/*.log

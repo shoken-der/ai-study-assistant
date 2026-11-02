@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">STUDY FLASHCARDS</p>
+        <h1 class="section-title">
+            Revision <span class="gradient-text">Flashcards</span>
+        </h1>
+        <p class="muted">
+            Turn your study notes into simple flip cards to test what you remember.
+        </p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+        {% if error_message %}
+            <div class="alert alert-warning">{{ error_message }}</div>
+        {% endif %}
+
+        {% if notes %}
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label for="note_id" class="form-label">Which note do you want to study?</label>
+                    <select name="note_id" id="note_id"
+                            class="form-select" required>
+                        <option value="">Select a note...</option>
+                        {% for note in notes %}
+                            <option value="{{ note.pk }}"
+                                {% if selected_note_id == note.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ note.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="card_count" class="form-label">How many cards do you want?</label>
+                    <select name="card_count" id="card_count" class="form-select">
+                        <option value="4" {% if card_count == 4 %}selected{% endif %}>4 cards — Quick check</option>
+                        <option value="8" {% if card_count == 8 %}selected{% endif %}>8 cards — Standard</option>
+                        <option value="12" {% if card_count == 12 %}selected{% endif %}>12 cards — Full review</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-glow">
+                    ✨ Make Flashcards
+                </button>
+            </form>
+        {% else %}
+            <p class="muted">Write or paste a study note first before creating flashcards.</p>
+            <a href="{% url 'note_create' %}" class="btn btn-glow">
+                + Write a Note
+            </a>
+        {% endif %}
+    </div>
+
+    {% if cards %}
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <p class="eyebrow mb-1">YOUR FLASHCARDS</p>
+                <h3>Click the card to flip it!</h3>
+            </div>
+            <span class="muted" id="card-progress">Card 1 of {{ cards|length }}</span>
+        </div>
+
+        <div class="flashcard-stage mb-4">
+            {% for card in cards %}
+                <button type="button"
+                        class="flashcard flip-card"
+                        data-card-index="{{ forloop.counter0 }}"
+                        aria-label="Reveal answer for card {{ forloop.counter }}"
+                        {% if not forloop.first %}hidden{% endif %}>
+                    <span class="flashcard-inner">
+                        <span class="flashcard-face flashcard-front">
+                            <span class="eyebrow">QUESTION {{ forloop.counter }}</span>
+                            <span class="flashcard-text">{{ card.question }}</span>
+                            <span class="flashcard-hint">Click to reveal answer ↗</span>
+                        </span>
+                        <span class="flashcard-face flashcard-back">
+                            <span class="eyebrow">ANSWER {{ forloop.counter }}</span>
+                            {% if card.points and card.points|length > 0 %}
+                                <ul class="flashcard-points">
+                                    {% for pt in card.points %}
+                                        <li>
+                                            <span class="bullet-dot">✦</span>
+                                            <span class="point-text">{{ pt }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <span class="flashcard-text">{{ card.answer }}</span>
+                            {% endif %}
+                            <span class="flashcard-hint">Click to see question ↗</span>
+                        </span>
+                    </span>
+                </button>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <button type="button" id="previous-card" class="btn btn-glass">
+                ← Previous
+            </button>
+            <button type="button" id="reset-card" class="btn btn-glass">
+                Reset Card
+            </button>
+            <button type="button" id="next-card" class="btn btn-glow">
+                Next →
+            </button>
+        </div>
+
+        <script>
+        (() => {
+            const cards = Array.from(
+                document.querySelectorAll(".flip-card")
+            );
+            const progress = document.getElementById("card-progress");
+            const previous = document.getElementById("previous-card");
+            const next = document.getElementById("next-card");
+            const reset = document.getElementById("reset-card");
+            let current = 0;
+
+            function showCard(index) {
+                current = (index + cards.length) % cards.length;
+
+                cards.forEach((card, i) => {
+                    card.hidden = i !== current;
+                    card.classList.remove("is-flipped");
+                });
+
+                progress.textContent =
+                    `Card ${current + 1} of ${cards.length}`;
+            }
+
+            previous.addEventListener("click", () => {
+                showCard(current - 1);
+            });
+
+            next.addEventListener("click", () => {
+                showCard(current + 1);
+            });
+
+            reset.addEventListener("click", () => {
+                cards[current].classList.remove("is-flipped");
+            });
+        })();
+        </script>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-glass">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

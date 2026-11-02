@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Practice Quiz | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">PRACTICE QUIZ</p>
+        <h1 class="section-title">
+            Practice <span class="gradient-text">Quiz</span>
+        </h1>
+        <p class="muted">
+            Make a quick multiple-choice quiz from your notes to test what you know.
+        </p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5 mx-auto" style="max-width: 760px;">
+        <div class="mb-4">
+            <div class="feature-icon mb-3">
+                <span>🎯</span>
+            </div>
+            <h3>Create Your Quiz</h3>
+            <p class="muted">
+                Your AI helper will create questions directly from the note you choose.
+            </p>
+        </div>
+
+        {% if error_message %}
+            <div class="alert alert-warning">{{ error_message }}</div>
+        {% endif %}
+
+        {% if notes %}
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label for="note_id" class="form-label">
+                        Which note do you want a quiz on?
+                    </label>
+                    <select name="note_id" id="note_id"
+                            class="form-select" required>
+                        <option value="">Choose a note...</option>
+                        {% for note in notes %}
+                            <option value="{{ note.pk }}"
+                                {% if selected_note_id == note.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ note.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="question_count" class="form-label">
+                        How many questions?
+                    </label>
+                    <select name="question_count" id="question_count"
+                            class="form-select" required>
+                        <option value="3">3 questions — Quick check</option>
+                        <option value="5" selected>5 questions — Standard</option>
+                        <option value="10">10 questions — Full test</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-glow">
+                    ✨ Start My Quiz
+                </button>
+            </form>
+        {% else %}
+            <p class="muted">
+                You don't have any notes saved yet. Write a note first to take a quiz.
+            </p>
+            <a href="{% url 'note_create' %}" class="btn btn-glow">
+                + Write a Note
+            </a>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-glass">
+                ← Back to Workspace
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

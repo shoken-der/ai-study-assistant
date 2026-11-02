@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load assistant_tags %}
+
+{% block title %}Quiz Results | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="glass-card text-center p-4 p-md-5 mb-4">
+        <p class="eyebrow">QUIZ FINISHED!</p>
+        <h1 class="section-title">
+            Your Quiz <span class="gradient-text">Score</span>
+        </h1>
+        <p class="muted">Quiz from: <strong>{{ note_title }}</strong></p>
+
+        <div class="quiz-score mx-auto my-4">
+            <span class="score-number">{{ percentage }}%</span>
+            <span class="muted">Final Score</span>
+        </div>
+
+        <h3>You got {{ score }} out of {{ total }} correct!</h3>
+        {% if percentage >= 80 %}
+            <p class="muted">Amazing work! You know this topic really well.</p>
+        {% elif percentage >= 50 %}
+            <p class="muted">Good effort! Check the explanations below to learn the ones you missed.</p>
+        {% else %}
+            <p class="muted">Good practice! Review your notes and try taking the quiz again.</p>
+        {% endif %}
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{% url 'quiz_generator' %}" class="btn btn-glow">
+                Take Another Quiz ↗
+            </a>
+            <a href="{% url 'dashboard' %}" class="btn btn-glass">
+                ← Back to Workspace
+            </a>
+        </div>
+    </div>
+
+    <h2 class="section-title mb-4">Review Your <span class="gradient-text">Answers</span></h2>
+
+    {% for item in results %}
+        <div class="glass-card p-4 mb-3">
+            <h4>{{ forloop.counter }}. {{ item.question }}</h4>
+
+            <p class="mb-2">
+                <strong>Your answer:</strong>
+                {% if item.selected_answer == -1 %}
+                    <span class="text-warning">Not answered</span>
+                {% else %}
+                    {% for option in item.options %}
+                        {% if forloop.counter0 == item.selected_answer %}
+                            {{ option }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </p>
+
+            <p class="mb-2">
+                <strong>Correct answer:</strong>
+                {% for option in item.options %}
+                    {% if forloop.counter0 == item.correct_answer %}
+                        <span class="text-success fw-bold">{{ option }}</span>
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            {% if item.is_correct %}
+                <p class="text-success fw-bold mb-2">✓ Correct! Great job.</p>
+            {% else %}
+                <p class="text-warning fw-bold mb-2">✗ Not quite — here is the reason:</p>
+            {% endif %}
+
+            {% if item.explanation %}
+                <div class="muted mb-0 small">
+                    <strong>Why this is correct:</strong> {{ item.explanation|format_ai }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

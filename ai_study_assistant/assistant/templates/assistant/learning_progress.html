@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}My Learning Progress | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+
+    <!-- Header Section -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5">
+        <div>
+            <div class="eyebrow mb-2">
+                <span class="status-dot"></span>
+                MY STUDY PROGRESS
+            </div>
+            <h1 class="section-title mb-2">
+                Learning <span class="gradient-text">Progress</span>
+            </h1>
+            <p class="muted mb-0">
+                See your quiz scores, total notes, and how much you have studied this week.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <a href="{% url 'quiz_generator' %}" class="btn-glow text-decoration-none">
+                ✨ Take a Quiz ↗
+            </a>
+            <a href="{% url 'dashboard' %}" class="btn-glass text-decoration-none">
+                ← Workspace
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 Key Stat Cards -->
+    <div class="progress-grid mb-5">
+
+        <div class="glass-card progress-stat">
+            <div class="stat-icon-wrap stat-icon-purple">
+                <span>📚</span>
+            </div>
+            <div class="stat-meta-label">Saved Notes</div>
+            <h2>{{ notes_count }}</h2>
+            <div class="stat-tag">
+                <span>✦</span> In your library
+            </div>
+        </div>
+
+        <div class="glass-card progress-stat">
+            <div class="stat-icon-wrap stat-icon-cyan">
+                <span>🎯</span>
+            </div>
+            <div class="stat-meta-label">Quizzes Taken</div>
+            <h2>{{ total_quizzes }}</h2>
+            <div class="stat-tag">
+                <span>✦</span> Completed quizzes
+            </div>
+        </div>
+
+        <div class="glass-card progress-stat">
+            <div class="stat-icon-wrap stat-icon-amber">
+                <span>⚡</span>
+            </div>
+            <div class="stat-meta-label">Average Score</div>
+            <h2>{{ average_score }}%</h2>
+            <div class="stat-tag">
+                <span>✦</span> Across all quizzes
+            </div>
+        </div>
+
+        <div class="glass-card progress-stat">
+            <div class="stat-icon-wrap stat-icon-emerald">
+                <span>🏆</span>
+            </div>
+            <div class="stat-meta-label">Highest Score</div>
+            <h2>{{ best_score }}%</h2>
+            <div class="stat-tag">
+                <span>✦</span> Your best result
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Knowledge Check Section -->
+    <div class="glass-card p-4 p-md-5 mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <div class="eyebrow mb-1">OVERALL ACCURACY</div>
+                <h3 class="mb-0">Quiz Questions Answered Correctly</h3>
+            </div>
+            {% if total_questions %}
+                <span class="score-badge score-badge-high">
+                    {% widthratio correct_answers total_questions 100 %}% Correct
+                </span>
+            {% else %}
+                <span class="score-badge score-badge-mid">
+                    0% (Take your first quiz!)
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="progress-track-wrap my-3">
+            <div class="progress-track">
+                {% if total_questions %}
+                    <div class="progress-fill" style="width: {% widthratio correct_answers total_questions 100 %}%;"></div>
+                {% else %}
+                    <div class="progress-fill" style="width: 0%;"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between muted small mt-2">
+            <span>{{ correct_answers }} correct out of {{ total_questions }} total questions</span>
+            <span>Keep taking quizzes to increase your accuracy!</span>
+        </div>
+    </div>
+
+    <!-- 7-Day Activity Chart Section -->
+    <div class="glass-card p-4 p-md-5 mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+            <div>
+                <div class="eyebrow mb-1">WEEKLY ACTIVITY</div>
+                <h3 class="mb-0">Your Past 7 Days</h3>
+            </div>
+            <span class="muted small">Shows notes added and quizzes taken</span>
+        </div>
+
+        <div class="activity-chart">
+            {% for day in activity_data %}
+                <div class="activity-column">
+                    <span class="activity-count" title="{{ day.count }} study actions">{{ day.count }}</span>
+                    <div class="activity-bar-track">
+                        <div class="activity-bar" style="height: {{ day.height_percent }}%;"></div>
+                    </div>
+                    <span class="activity-day">{{ day.day_name }}</span>
+                    <span class="activity-date">{{ day.date_label }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recent Quiz Attempts Section -->
+    <div class="glass-card p-4 p-md-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+            <div>
+                <div class="eyebrow mb-1">RECENT QUIZZES</div>
+                <h3 class="mb-0">Recent Quiz Results</h3>
+            </div>
+            <span class="muted small">Your latest scores</span>
+        </div>
+
+        {% if recent_attempts %}
+            <div class="attempt-list">
+                {% for attempt in recent_attempts %}
+                    <div class="attempt-row">
+                        <div>
+                            <div class="attempt-title">{{ attempt.note_title }}</div>
+                            <div class="attempt-meta">
+                                <span>📅 {{ attempt.created_at|date:"M d, Y · h:i A" }}</span>
+                                <span>✦ {{ attempt.score }}/{{ attempt.total_questions }} correct</span>
+                            </div>
+                        </div>
+                        <div class="attempt-score-wrap">
+                            {% if attempt.percentage >= 80 %}
+                                <span class="score-badge score-badge-high">{{ attempt.percentage }}%</span>
+                            {% elif attempt.percentage >= 50 %}
+                                <span class="score-badge score-badge-mid">{{ attempt.percentage }}%</span>
+                            {% else %}
+                                <span class="score-badge score-badge-low">{{ attempt.percentage }}%</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-progress-box">
+                <div class="empty-icon-circle">🎯</div>
+                <h4>No Quizzes Taken Yet</h4>
+                <p class="muted mx-auto mb-4" style="max-width: 480px;">
+                    Take a practice quiz on any of your notes to start seeing your scores here!
+                </p>
+                <a href="{% url 'quiz_generator' %}" class="btn-glow text-decoration-none">
+                    Start a Practice Quiz ↗
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

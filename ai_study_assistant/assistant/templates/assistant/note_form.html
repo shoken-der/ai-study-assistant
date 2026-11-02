@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="mb-4">
+        <p class="eyebrow">STUDY NOTES</p>
+        <h1 class="section-title">
+            <span class="gradient-text">{{ page_title }}</span>
+        </h1>
+        <p class="muted">Type or paste what you are studying. You can turn this into summaries and quizzes anytime.</p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}" class="form-label">
+                    Title of this note
+                </label>
+                {{ form.title }}
+                {% for error in form.title.errors %}
+                    <div class="text-danger small mt-2">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.content.id_for_label }}" class="form-label">
+                    Your notes / study text
+                </label>
+                {{ form.content }}
+                {% for error in form.content.errors %}
+                    <div class="text-danger small mt-2">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-glow">Save Note ✓</button>
+                <a href="{% url 'notes_list' %}" class="btn btn-glass">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

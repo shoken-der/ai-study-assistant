@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+
+{% block title %}StudyAI — Your Easy AI Study Buddy{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+
+    <!-- HERO 3D SECTION -->
+    <section class="row align-items-center g-5 mb-5 pt-2 hero-section">
+        <div class="col-lg-7">
+            <div class="eyebrow mb-3">
+                <span class="status-dot"></span>
+                <span>AI STUDY HELPER · SIMPLE & EASY</span>
+            </div>
+
+            <h1 class="hero-title">
+                Understand Anything.<br>
+                Study <span class="gradient-text">Easier & Faster.</span>
+            </h1>
+
+            <p class="hero-copy">
+                Stop struggling with long, confusing textbooks. Turn your notes into short summaries,
+                fun practice quizzes, and quick revision flashcards in seconds.
+            </p>
+
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-glow">
+                        <span>⚡</span> Open My Workspace <span>↗</span>
+                    </a>
+                    <a href="{% url 'learning_progress' %}" class="btn-glass">
+                        <span>📈</span> My Quiz Scores →
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn-glow">
+                        Start Learning Free <span>↗</span>
+                    </a>
+                    <a href="#interactive-showcase" class="btn-glass">
+                        See How It Works ↓
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="d-flex flex-wrap gap-4 mt-5 muted small">
+                <span class="d-flex align-items-center gap-2">
+                    <span class="text-cyan">✦</span> Fast & Easy to Use
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <span class="text-violet-bright">✦</span> Study at Your Own Pace
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <span class="text-emerald">✦</span> 100% Free & Private
+                </span>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="hero-visual position-relative">
+                <!-- Three.js WebGL 3D Canvas Container -->
+                <div id="three-hero-container" class="three-hero-viewport" aria-label="Interactive 3D Study Crystal"></div>
+
+                <!-- Floating 3D Badges -->
+                <div class="floating-chip chip-one">
+                    <span>✨</span> Short Summaries
+                </div>
+                <div class="floating-chip chip-two">
+                    <span>🎯</span> Fun Practice Quizzes
+                </div>
+                <div class="floating-chip chip-three">
+                    <span>🧠</span> Easy Flashcards
+                </div>
+
+                <!-- 3D Hint Banner -->
+                <div class="three-interaction-hint">
+                    <span>🖱️ Click & drag to spin the 3D crystal!</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIMPLE STATS STRIP -->
+    <section class="row g-3 mb-5 pt-3">
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value gradient-text">100% Free</div>
+                <div class="muted small">No credit card needed</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value text-white">4 Tools</div>
+                <div class="muted small">Everything in one place</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value text-cyan">In Seconds</div>
+                <div class="muted small">Instant AI answers</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value text-violet-bright">Private</div>
+                <div class="muted small">Your notes stay yours</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE SHOWCASE CONSOLE -->
+    <section id="interactive-showcase" class="mt-5 pt-4 mb-5">
+        <div class="text-center mb-5">
+            <div class="eyebrow mb-2">SEE IT IN ACTION</div>
+            <h2 class="section-title mt-2">
+                See how StudyAI helps you <span class="gradient-text">learn better.</span>
+            </h2>
+            <p class="muted mt-2" style="max-width: 620px; margin-inline: auto;">
+                Click any tool below to see how it turns complicated study material into simple, easy-to-read points.
+            </p>
+        </div>
+
+        <div class="glass-card p-4 p-md-5">
+            <div class="row g-4 align-items-center">
+                <!-- Interactive Tabs Column -->
+                <div class="col-lg-5">
+                    <div class="d-flex flex-column gap-3 showcase-tabs">
+                        <button type="button" class="showcase-tab active text-start p-3 rounded-4 border-0 w-100" data-feature="summary">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="tab-icon">✦</span>
+                                <div>
+                                    <div class="fw-bold text-white">1. Short Summaries</div>
+                                    <div class="muted small">Turn long pages into clear bullet points.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" class="showcase-tab text-start p-3 rounded-4 border-0 w-100" data-feature="quiz">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="tab-icon">🎯</span>
+                                <div>
+                                    <div class="fw-bold text-white">2. Practice Quizzes</div>
+                                    <div class="muted small">Test yourself with questions from your notes.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" class="showcase-tab text-start p-3 rounded-4 border-0 w-100" data-feature="flashcard">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="tab-icon">🧠</span>
+                                <div>
+                                    <div class="fw-bold text-white">3. Revision Flashcards</div>
+                                    <div class="muted small">Flip cards to remember key definitions.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" class="showcase-tab text-start p-3 rounded-4 border-0 w-100" data-feature="explainer">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="tab-icon">💡</span>
+                                <div>
+                                    <div class="fw-bold text-white">4. Simple Explanations</div>
+                                    <div class="muted small">Understand difficult topics with easy examples.</div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Terminal Simulation Screen Column -->
+                <div class="col-lg-7">
+                    <div class="showcase-terminal p-4 rounded-4 position-relative">
+                        <!-- Terminal Bar -->
+                        <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom border-white border-opacity-10">
+                            <div class="d-flex gap-2">
+                                <span class="terminal-dot bg-danger"></span>
+                                <span class="terminal-dot bg-warning"></span>
+                                <span class="terminal-dot bg-success"></span>
+                            </div>
+                            <span class="muted small font-monospace" id="terminal-badge">Short Summary Preview</span>
+                            <span class="badge-3d-pill">PREVIEW</span>
+                        </div>
+
+                        <!-- Dynamic Terminal Content Display -->
+                        <div id="terminal-output" class="terminal-body font-monospace">
+                            <div class="text-cyan mb-2">› Reading Note: "How Plants Make Food (Photosynthesis)"</div>
+                            <div class="text-white-50 mb-3">› Creating simple summary points...</div>
+                            <div class="p-3 rounded-3 bg-black bg-opacity-40 border border-white border-opacity-10 text-white">
+                                <div class="fw-bold text-violet-bright mb-2">✨ What You Need to Know:</div>
+                                <ul class="mb-0 ps-3 small text-white-50" style="line-height: 1.8;">
+                                    <li><strong class="text-white">What it is:</strong> Plants use sunlight, water, and air to make their own food.</li>
+                                    <li><strong class="text-white">Why it matters:</strong> It gives plants energy to grow and releases clean oxygen for us to breathe.</li>
+                                    <li><strong class="text-white">Key Takeaway:</strong> Sunlight + Water + Carbon Dioxide = Sugar (food) + Oxygen.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="mt-4 pt-2 d-flex justify-content-between align-items-center">
+                            <span class="text-success small d-flex align-items-center gap-2">
+                                <span class="status-dot"></span> Ready to use
+                            </span>
+                            <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'register' %}{% endif %}" class="btn-glow btn-sm py-2 px-3">
+                                Try It Yourself ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 FEATURE CARDS -->
+    <section class="mt-5 pt-3 mb-5">
+        <div class="text-center mb-5">
+            <div class="eyebrow mb-2">YOUR STUDY TOOLKIT</div>
+            <h2 class="section-title mt-2">
+                Everything you need to <span class="gradient-text">ace your exams.</span>
+            </h2>
+            <p class="muted mt-2" style="max-width: 600px; margin-inline: auto;">
+                Four simple tools designed to help you spend less time confused and more time learning.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">📚</div>
+                    <h4>Save Notes</h4>
+                    <p class="muted">
+                        Keep all your subject notes organized in one clean, safe place.
+                    </p>
+                    <a href="{% if user.is_authenticated %}{% url 'notes_list' %}{% else %}{% url 'login' %}{% endif %}" class="tool-link">
+                        My Notes ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">✦</div>
+                    <h4>Short Summaries</h4>
+                    <p class="muted">
+                        Turn lengthy chapters into short bullet points you can read in two minutes.
+                    </p>
+                    <a href="{% if user.is_authenticated %}{% url 'summarizer' %}{% else %}{% url 'login' %}{% endif %}" class="tool-link">
+                        Summarize ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">🎯</div>
+                    <h4>Practice Quizzes</h4>
+                    <p class="muted">
+                        Test yourself with questions from your notes to make sure you are ready for tests.
+                    </p>
+                    <a href="{% if user.is_authenticated %}{% url 'quiz_generator' %}{% else %}{% url 'login' %}{% endif %}" class="tool-link">
+                        Take Quiz ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">🧠</div>
+                    <h4>Flip Flashcards</h4>
+                    <p class="muted">
+                        Flip through interactive 3D flashcards to quickly remember key terms before class.
+                    </p>
+                    <a href="{% if user.is_authenticated %}{% url 'flashcard_lab' %}{% else %}{% url 'login' %}{% endif %}" class="tool-link">
+                        Review Cards ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM CTA BANNER -->
+    <section class="glass-card p-4 p-md-5 mt-5 text-center position-relative overflow-hidden">
+        <div class="eyebrow mb-3">GET STARTED FOR FREE</div>
+        <h2 class="section-title mt-2">
+            Ready to make studying <span class="gradient-text">feel easy?</span>
+        </h2>
+        <p class="muted mt-3 mb-4" style="max-width: 600px; margin-inline: auto;">
+            No setup needed. Create your free account in 30 seconds and start understanding your notes today.
+        </p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn-glow">
+                Go to My Workspace ↗
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn-glow">
+                Create Free Account ↗
+            </a>
+        {% endif %}
+    </section>
+
+</div>
+
+<!-- Interactive Showcase Script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.showcase-tab');
+    const badge = document.getElementById('terminal-badge');
+    const output = document.getElementById('terminal-output');
+
+    const featureData = {
+        summary: {
+            badge: 'Short Summary Preview',
+            html: `
+                <div class="text-cyan mb-2">› Reading Note: "How Plants Make Food (Photosynthesis)"</div>
+                <div class="text-white-50 mb-3">› Creating simple summary points...</div>
+                <div class="p-3 rounded-3 bg-black bg-opacity-40 border border-white border-opacity-10 text-white">
+                    <div class="fw-bold text-violet-bright mb-2">✨ What You Need to Know:</div>
+                    <ul class="mb-0 ps-3 small text-white-50" style="line-height: 1.8;">
+                        <li><strong class="text-white">What it is:</strong> Plants use sunlight, water, and air to make their own food.</li>
+                        <li><strong class="text-white">Why it matters:</strong> It gives plants energy to grow and releases clean oxygen for us to breathe.</li>
+                        <li><strong class="text-white">Key Takeaway:</strong> Sunlight + Water + Carbon Dioxide = Sugar (food) + Oxygen.</li>
+                    </ul>
+                </div>
+            `
+        },
+        quiz: {
+            badge: 'Practice Quiz Preview',
+            html: `
+                <div class="text-cyan mb-2">› Making a Quiz from: "The Solar System"</div>
+                <div class="text-white-50 mb-3">› Practice Question 1:</div>
+                <div class="p-3 rounded-3 bg-black bg-opacity-40 border border-white border-opacity-10 text-white">
+                    <div class="fw-bold text-white mb-2">Q: Which planet is closest to the Sun?</div>
+                    <div class="d-flex flex-column gap-2 small mt-2">
+                        <div class="p-2 rounded bg-white bg-opacity-10 border border-white border-opacity-10 text-white">A) Venus</div>
+                        <div class="p-2 rounded bg-primary bg-opacity-25 border border-primary text-cyan fw-bold">✓ B) Mercury (Correct Answer!)</div>
+                        <div class="p-2 rounded bg-white bg-opacity-10 border border-white border-opacity-10 text-white">C) Mars</div>
+                    </div>
+                </div>
+            `
+        },
+        flashcard: {
+            badge: 'Flashcard Preview',
+            html: `
+                <div class="text-cyan mb-2">› Card Deck: "Basic Science Terms"</div>
+                <div class="text-white-50 mb-3">› Card 1 of 4:</div>
+                <div class="p-3 rounded-3 bg-black bg-opacity-40 border border-white border-opacity-10 text-white">
+                    <div class="eyebrow mb-2">QUESTION</div>
+                    <div class="h5 text-white mb-3">What is Gravity?</div>
+                    <div class="p-2 rounded bg-white bg-opacity-5 border border-white border-opacity-10 text-white-50 small">
+                        ✦ Click to see answer: The invisible force that pulls objects toward each other (like keeping our feet on the ground!).
+                    </div>
+                </div>
+            `
+        },
+        explainer: {
+            badge: 'Simple Explanation Preview',
+            html: `
+                <div class="text-cyan mb-2">› Question: "How does the Internet work?"</div>
+                <div class="text-white-50 mb-3">› Easy explanation with an example:</div>
+                <div class="p-3 rounded-3 bg-black bg-opacity-40 border border-white border-opacity-10 text-white">
+                    <div class="fw-bold text-violet-bright mb-2">💡 Think of it like sending mail:</div>
+                    <p class="small text-white-50 mb-0" style="line-height: 1.7;">
+                        "When you open a website, your computer sends a letter (a request) to a super-computer far away (called a server). That computer opens your letter and sends back pictures and words like a return envelope. Cables and Wi-Fi are just the postal roads!"
+                    </p>
+                </div>
+            `
+        }
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const feat = tab.dataset.feature;
+            if (featureData[feat]) {
+                badge.textContent = featureData[feat].badge;
+                output.style.opacity = '0';
+                setTimeout(() => {
+                    output.innerHTML = featureData[feat].html;
+                    output.style.opacity = '1';
+                }, 150);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

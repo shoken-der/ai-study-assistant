@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}My Study Notes | StudyAI{% endblock %}
+
+{% block content %}
+<div class="container page-wrap py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5">
+        <div>
+            <p class="eyebrow mb-2">MY NOTES</p>
+            <h1 class="section-title mb-1">
+                My Study <span class="gradient-text">Notes</span>
+            </h1>
+            <p class="muted mb-0">
+                Write, organize, and find all your notes in one place.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'note_create' %}" class="btn btn-glow">
+                + Write a Note
+            </a>
+            <a href="{% url 'summarizer' %}" class="btn btn-glass">
+                ✨ Short Summarizer
+            </a>
+        </div>
+    </div>
+
+    {% if notes %}
+        <div class="row g-4">
+            {% for note in notes %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <h4 class="mb-0 text-white" title="{{ note.title }}">
+                                    {{ note.title }}
+                                </h4>
+                            </div>
+                            <div class="muted small mb-3">
+                                Last updated {{ note.updated_at|date:"M d, Y" }}
+                            </div>
+                            <p class="note-preview">
+                                {{ note.content|truncatechars:180 }}
+                            </p>
+                        </div>
+
+                        <div class="pt-3 border-top border-white border-opacity-10 mt-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <a href="{% url 'summarizer' %}?note={{ note.pk }}"
+                               class="btn btn-sm btn-glass text-decoration-none">
+                                ✨ Summarize
+                            </a>
+
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'note_edit' note.pk %}"
+                                   class="btn btn-sm btn-glass text-decoration-none">
+                                    Edit
+                                </a>
+                                <a href="{% url 'note_delete' note.pk %}"
+                                   class="btn btn-sm btn-glass text-danger text-decoration-none"
+                                   title="Delete note">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="glass-card p-5 text-center my-4">
+            <div class="display-4 mb-3">📚</div>
+            <h3 class="mb-2">You don't have any notes saved yet</h3>
+            <p class="muted mx-auto mb-4" style="max-width: 500px;">
+                Write down your class notes, lecture summaries, or textbook points.
+                Then turn them into practice quizzes and short summaries with one click!
+            </p>
+            <a href="{% url 'note_create' %}" class="btn btn-glow">
+                + Write Your First Note
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
